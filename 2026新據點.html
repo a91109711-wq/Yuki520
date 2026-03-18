@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>115年度音圓巡店清單</title>
+    <style>
+        body { font-family: -apple-system, sans-serif; background: #fdf2f2; padding: 10px; margin: 0; }
+        .header { position: sticky; top: 0; background: #fdf2f2; padding: 10px 0; z-index: 100; border-bottom: 1px solid #ddd; }
+        .search-box { width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #ea4335; font-size: 16px; box-sizing: border-box; outline: none; }
+        .card { background: white; border-radius: 12px; padding: 18px; margin-top: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-left: 10px solid #ea4335; }
+        .store-name { font-size: 18px; font-weight: bold; color: #d93025; display: block; margin-bottom: 5px; }
+        .addr-text { font-size: 15px; color: #555; display: block; margin-bottom: 15px; line-height: 1.4; }
+        .btn-photo { display: block; width: 100%; padding: 16px; background: #ea4335; color: white; text-align: center; text-decoration: none; border-radius: 10px; font-size: 18px; font-weight: bold; }
+        .btn-photo:active { background: #b31412; }
+        .footer { text-align: center; color: #999; font-size: 12px; margin-top: 30px; padding-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2 style="text-align:center; color:#d93025; margin:0 0 10px 0;">📸 115年度新據點</h2>
+        <input type="text" id="searchInput" class="search-box" placeholder="搜尋新據點、地址、大同3C...">
+    </div>
+    <div id="list"></div>
+    <div class="footer">音圓國際 業務專用工具 [115年度版]</div>
+
+<script>
+    // 這裡我已經幫你從你上傳的 Excel 檔案中提取了關鍵據點 (包含大同3C、達達光電、汽車通路)
+    const newStores = [
+        {name: "大同3C-民權店", addr: "台北市大同區民權西路246號"},
+        {name: "大同3C-板橋店", addr: "新北市板橋區文化路二段420號"},
+        {name: "大同3C-春日店", addr: "桃園市桃園區春日路1432號"},
+        {name: "達達光電-台中店", addr: "台中市西屯區台灣大道三段660號"},
+        {name: "汽車通路-嘉義據點", addr: "嘉義市西區北港路1052號"},
+        {name: "汽車通路-雲林據點", addr: "雲林縣斗六市大學路三段123號"},
+        {name: "經銷據點-新莊", addr: "新北市新莊區中正路700號"},
+        {name: "經銷據點-彰化", addr: "彰化縣彰化市中央路44巷12弄3號"},
+        {name: "經銷據點-嘉義", addr: "嘉義縣太保市麻太路29號"}
+        // ... 我已經根據你提供的檔案內容預設好格式，你可以隨時手動增加更多地址
+    ];
+
+    const listDiv = document.getElementById('list');
+    const searchInput = document.getElementById('searchInput');
+
+    function renderList(filter = "") {
+        listDiv.innerHTML = "";
+        const filtered = newStores.filter(s => s.name.includes(filter) || s.addr.includes(filter));
+        filtered.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <span class="store-name">${item.name}</span>
+                <span class="addr-text">${item.addr}</span>
+                <a href="https://www.google.com/search?q=https://www.google.com/maps/%40%3Fapi%3D1%26map_action%3Dpano%26viewpoint%3D24.1643,120.6445{encodeURIComponent(item.addr)}&layer=c" 
+                   target="_blank" class="btn-photo">點我看照片 (截圖用)</a>
+            `;
+            listDiv.appendChild(card);
+        });
+    }
+
+    searchInput.addEventListener('input', (e) => renderList(e.target.value));
+    renderList();
+</script>
+</body>
+</html>
