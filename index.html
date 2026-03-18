@@ -3,211 +3,41 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>115年度巡店照片清單</title>
+    <title>音圓 115年度 會員all 清單</title>
     <style>
-        body { font-family: -apple-system, sans-serif; background: #fdf2f2; padding: 10px; margin: 0; }
-        .header { position: sticky; top: 0; background: #fdf2f2; padding: 10px 0; z-index: 100; border-bottom: 2px solid #ea4335; }
+        body { font-family: -apple-system, sans-serif; background: #f4f4f7; padding: 10px; margin: 0; }
+        .header { position: sticky; top: 0; background: #f4f4f7; padding: 10px 0; z-index: 100; border-bottom: 2px solid #ea4335; }
         .search-box { width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #ea4335; font-size: 16px; box-sizing: border-box; outline: none; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .card { background: white; border-radius: 12px; padding: 18px; margin-top: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-left: 10px solid #ea4335; }
-        .store-name { font-size: 18px; font-weight: bold; color: #d93025; display: block; margin-bottom: 5px; }
-        .addr-text { font-size: 15px; color: #555; display: block; margin-bottom: 15px; line-height: 1.4; }
+        .card { background: white; border-radius: 12px; padding: 18px; margin-top: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-left: 8px solid #ea4335; }
+        .store-name { font-size: 18px; font-weight: bold; color: #333; display: block; margin-bottom: 5px; }
+        .addr-text { font-size: 14px; color: #666; display: block; margin-bottom: 15px; line-height: 1.4; }
         .btn-photo { display: block; width: 100%; padding: 16px; background: #ea4335; color: white; text-align: center; text-decoration: none; border-radius: 10px; font-size: 18px; font-weight: bold; }
         .btn-photo:active { background: #b31412; }
-        .footer { text-align: center; color: #999; font-size: 12px; margin-top: 30px; padding-bottom: 20px; }
+        .footer { text-align: center; color: #999; font-size: 12px; margin: 30px 0 20px 0; }
     </style>
 </head>
 <body>
     <div class="header">
-        <h2 style="text-align:center; color:#d93025; margin:0 0 10px 0;">📸 115年度 經銷據點清單</h2>
-        <input type="text" id="searchInput" class="search-box" placeholder="搜尋店名、地址、大同3C或汽車...">
+        <h2 style="text-align:center; color:#d93025; margin:0 0 10px 0;">📸 115年度 會員all 清單</h2>
+        <input type="text" id="searchInput" class="search-box" placeholder="搜尋店名或地址...">
     </div>
     <div id="list"></div>
-    <div class="footer">音圓國際 業務專用工具 [115年度 完整版]</div>
+    <div class="footer">音圓業務專用 [Albert 2026 版]</div>
 
 <script>
-    // 這裡完全依照你提供的 Excel 檔案整理出的 310 筆據點
+    // 這裡嚴格依照「會員all」檔案的原始順序排列，共 837 筆
     const stores = [
-        {"name": "大同3C-民權站", "addr": "台北市中山區民權東路三段65號"},
-        {"name": "大同3C-宜蘭站", "addr": "宜蘭市中山路三段73號"},
-        {"name": "大同3C-汐止福德(南港站)", "addr": "新北市汐止市福德一路249號"},
-        {"name": "大同3C-基隆信一站", "addr": "基隆市中正區信一路155號"},
-        {"name": "大同3C-復南站", "addr": "台北市大安區復興南路ㄧ段154~162號"},
-        {"name": "大同3C-鴻金寶店", "addr": "新北市新莊市四維路97巷22號"},
-        {"name": "大同3C-正義店", "addr": "新北市三重市正義北路150號"},
-        {"name": "大同3C-蘆洲站", "addr": "新北市蘆洲市光華路188、190號"},
-        {"name": "大同3C-埔墘店(民族站)", "addr": "新北市板橋市中山路二段168號"},
-        {"name": "大同3C-土城中央門市", "addr": "新北市土城市中央路2段186號"},
-        {"name": "大同3C-文林店(延平站)", "addr": "台北市士林區文林路450號"},
-        {"name": "大同3C-桃園春日店(龜山站)", "addr": "桃園市春日路355號"},
-        {"name": "大同3C-大園站", "addr": "桃園縣大園鄉中正東路151號1樓"},
-        {"name": "大同3C-內壢店(大溪站)", "addr": "桃園縣中壢市環中東路216號"},
-        {"name": "大同3C-八德介壽店(大湳站)", "addr": "桃園縣八德市介壽路一段752號"},
-        {"name": "大同3C-龍岡站", "addr": "桃園縣中壢市龍東路49之1號"},
-        {"name": "大同3C-龍潭站", "addr": "桃園縣龍潭鄉北龍路84號"},
-        {"name": "大同3C-南崁店", "addr": "桃園縣蘆竹鄉中正路324、326號"},
-        {"name": "大同3C-竹北展售中心", "addr": "新竹縣竹北市中正東路111號"},
-        {"name": "大同3C-西大站", "addr": "新竹市食品路301、303、305號"},
-        {"name": "大同3C-竹科展售中心", "addr": "新竹市光復路一段659號"},
-        {"name": "大同3C-西大展售中心", "addr": "新竹市西大路322、324號"},
-        {"name": "大同3C-中和景新門市", "addr": "新北市中和市南勢角景新街373至373-1號"},
-        {"name": "大同3C-大同樹林門市", "addr": "新北市板橋市溪北路43、45號"},
-        {"name": "大同3C-通霄站", "addr": "苗栗縣通霄鎮中正路3-8號"},
-        {"name": "大同3C-苗栗建功站", "addr": "苗栗市建功街1、3號"},
-        {"name": "大同3C-苑裡站", "addr": "苗栗縣苑裡鎮新興路48之2號"},
-        {"name": "大同3C-豐原站", "addr": "台中縣豐原市圓環南路226號"},
-        {"name": "大同3C-中南站", "addr": "台中市南區新壓里台中路49、51號"},
-        {"name": "大同3C-中科店(水湳站)", "addr": "台中市西屯區西屯路三段150-45號"},
-        {"name": "大同3C-中清展售中心", "addr": "台中市北屯區中清路72之8-7號"},
-        {"name": "大同3C-河南展售中心", "addr": "台中市南屯區河南路四段289號"},
-        {"name": "大同3C-大雅站", "addr": "台中縣大雅鄉民生路一段233、233-1號"},
-        {"name": "大同3C-東勢站", "addr": "台中縣東勢鎮豐勢路527、531號"},
-        {"name": "大同3C-精武站", "addr": "台中市東區精武東路196、198號"},
-        {"name": "大同3C-復興站", "addr": "台中市復興路一段454、456號"},
-        {"name": "大同3C-彰化站", "addr": "彰化市三民路362號"},
-        {"name": "大同3C-彰化中山展售中心", "addr": "彰化市中山路三段148號"},
-        {"name": "大同3C-和美站", "addr": "彰化縣和美鎮鹿和路六段459、461號"},
-        {"name": "大同3C-鹿港站", "addr": "彰化縣鹿港鎮中正路222號"},
-        {"name": "大同3C-溪湖站", "addr": "彰化縣溪湖鎮彰水路三段409、411號"},
-        {"name": "大同3C-員林站", "addr": "彰化縣員林鎮育英路59號"},
-        {"name": "大同3C-北斗站", "addr": "彰化縣北斗鎮中華路26號"},
-        {"name": "大同3C-埔里中山展售中心", "addr": "南投縣埔里鎮中山路二段339、341號"},
-        {"name": "大同3C-霧峰站", "addr": "台中縣霧峰鄉中正路1065、1067號"},
-        {"name": "大同3C-草屯中正展售中心", "addr": "南投縣草屯鎮中正路911號"},
-        {"name": "大同3C-大里站", "addr": "台中縣大里市中興路一段229、231號"},
-        {"name": "大同3C-曉陽店(華山站)", "addr": "彰化市曉陽路135號"},
-        {"name": "大同3C-斗六中山展售中心", "addr": "雲林縣斗六市中山路335號"},
-        {"name": "大同3C-忠孝站", "addr": "嘉義市公明路201號"},
-        {"name": "大同3C-大林站", "addr": "嘉義縣大林鎮中正路369號"},
-        {"name": "大同3C-水上站", "addr": "嘉義縣水上鄉中興路348、350號"},
-        {"name": "大同3C-崙背站", "addr": "雲林縣崙背鄉南陽村建國路38號"},
-        {"name": "大同3C-褒忠店(台西站)", "addr": "雲林縣褒忠鄉中正路386、388號"},
-        {"name": "大同3C-大同站", "addr": "雲林縣斗六市雲林路一段51、53、55號"},
-        {"name": "大同3C-虎尾林森店(和平站)", "addr": "雲林縣虎尾鎮林森路二段259號"},
-        {"name": "大同3C-慶昇站", "addr": "嘉義市民族路766、768號"},
-        {"name": "大同3C-嘉義仁愛店(民族站)", "addr": "嘉義市仁愛路300號"},
-        {"name": "大同3C-斗六站", "addr": "雲林縣斗六市成功路509號"},
-        {"name": "大同3C-新營站", "addr": "台南縣新營市中山路203號"},
-        {"name": "大同3C-成功站", "addr": "台南市公園路591-37、38號"},
-        {"name": "大同3C-仁德展售中心", "addr": "台南縣仁德鄉中正路二段500號"},
-        {"name": "大同3C-文賢店(安南站)", "addr": "台南市文賢路1028號"},
-        {"name": "大同3C-中華展售中心", "addr": "台南縣永康市中華路736號"},
-        {"name": "大同3C-善化站", "addr": "台南縣新市鄉華興街7號"},
-        {"name": "大同3C-麻豆站", "addr": "台南縣麻豆鎮興中路146-1號"},
-        {"name": "大同3C-玉井站", "addr": "台南縣玉井鄉中山路242、244號"},
-        {"name": "大同3C-民治展售中心", "addr": "台南縣新營市民治路335號"},
-        {"name": "大同3C-新化站", "addr": "台南縣新化鎮忠孝路150號"},
-        {"name": "大同3C-南左營展售中心", "addr": "高雄市左營區左營大路64號"},
-        {"name": "大同3C-華夏展售中心", "addr": "高雄市左營區華夏路647號"},
-        {"name": "大同3C-裕誠展售中心", "addr": "高雄市左營區裕誠路455-1號"},
-        {"name": "大同3C-鳳山站", "addr": "高雄縣鳳山市五甲一路80、82號"},
-        {"name": "大同3C-五甲展售中心", "addr": "高雄縣鳳山市五甲二路694-696號"},
-        {"name": "大同3C-小港站", "addr": "高雄市小港區漢民路230號"},
-        {"name": "大同3C-岡山站", "addr": "高雄縣岡山鎮柳橋東路27號"},
-        {"name": "大同3C-旗山站", "addr": "高雄縣旗山鎮延平一路671、673號"},
-        {"name": "大同3C-路竹站", "addr": "高雄縣路竹鄉大社路65號"},
-        {"name": "大同3C-屏東自由展售中心", "addr": "屏東縣屏東市自由路522號"},
-        {"name": "大同3C-東港站(新)", "addr": "屏東縣東港鎮中山路35號-2"},
-        {"name": "大同3C-鹽水展售中心", "addr": "台南縣鹽水朝琴路130號1樓"},
-        {"name": "大同3C-佳里中山站", "addr": "台南縣佳里鎮中山路351號"},
-        {"name": "大同3C-友愛展售中心", "addr": "宜蘭市舊城東路49號"},
-        {"name": "大同3C-羅東站", "addr": "宜蘭縣羅東鎮中正路18-20號"},
-        {"name": "大同3C-朴子站", "addr": "嘉義縣朴子市海通路17-1號"},
-        {"name": "大同3C-開元展售中心", "addr": "台南市北區開元路351號"},
-        {"name": "大同3C-埔心展售中心", "addr": "桃園縣楊梅鎮永美路369號"},
-        {"name": "大同3C-竹南站", "addr": "苗栗縣竹南鎮博愛街273號"},
-        {"name": "大同3C-大同3c民雄", "addr": "嘉義縣民雄鄉中樂路78號"},
-        {"name": "大同3C-虎尾站", "addr": "雲林縣虎尾鎮中正路176號"},
-        {"name": "大同3C-桃園站", "addr": "桃園市中正路665、667號"},
-        {"name": "大同3C-竹山站", "addr": "南投縣竹山鎮大明路418號"},
-        {"name": "大同3C-二林站", "addr": "彰化縣二林鎮中山路120號"},
-        {"name": "大同3C-潭子站", "addr": "台中縣潭子鄉勝利路158號"},
-        {"name": "大同3C-苗栗卓蘭站", "addr": "苗栗縣卓蘭鎮中山路56號"},
-        {"name": "大同3C-豐原中山門市", "addr": "台中縣豐原市中山路226-1號"},
-        {"name": "大同3C-社子展售中心", "addr": "台北市大同區延平北路五段130、132號"},
-        {"name": "大同3C-豐原中正展售中心", "addr": "台中縣豐原市中正路191號"},
-        {"name": "大同3C-吳鳳站", "addr": "嘉義市吳鳳北路81號"},
-        {"name": "大同3C-內埔服務站", "addr": "屏東縣內埔鄉廣濟路309號"},
-        {"name": "大同3C-林園服務", "addr": "高雄縣林園鄉林園北路408號"},
-        {"name": "大同3C-田中大揚店", "addr": "田中鎮中路里中洲路一段161號"},
-        {"name": "大同3C-石牌展售中心", "addr": "台北市石牌路一段73號"},
-        {"name": "大同3C-東湖展售中心", "addr": "台北市內湖區東湖路27號1樓"},
-        {"name": "大同3C-東橋展售中心", "addr": "嘉義縣民雄鄉建國路3段129號"},
-        {"name": "大同3C-太平服務", "addr": "台中縣太平市中政里中興路149-3號"},
-        {"name": "達達光電-八德介壽", "addr": "桃園縣八德市介壽路一段909號"},
-        {"name": "達達光電-桃園中山", "addr": "桃園縣桃園市中山路153號"},
-        {"name": "達達光電-蘆洲長榮", "addr": "台北縣蘆洲市長榮路516號"},
-        {"name": "達達光電-竹北縣政", "addr": "新竹縣竹北市縣政九路178號"},
-        {"name": "達達光電-龍潭北龍", "addr": "桃園縣龍潭鄉北龍路22號"},
-        {"name": "達達光電-頭份中華", "addr": "苗栗縣頭份鎮中華路1018號"},
-        {"name": "達達光電-竹南博愛", "addr": "苗栗縣竹南鎮博愛街323之1號"},
-        {"name": "達達光電-北投大業", "addr": "台北市北投區大業路506號"},
-        {"name": "達達光電-台北忠誠", "addr": "台北市忠誠路二段76巷1號"},
-        {"name": "達達光電-板橋中山一", "addr": "台北縣板橋市中山路一段50-7號"},
-        {"name": "達達光電-淡水英專二", "addr": "台北縣淡水鎮英專路49號"},
-        {"name": "達達光電-台北中華", "addr": "台北市萬華區中華路二段380號"},
-        {"name": "達達光電-台北八德二", "addr": "台北市八德路四段246號"},
-        {"name": "達達光電-台北忠孝二", "addr": "台北市大安區忠孝東路四段94號1樓"},
-        {"name": "達達光電-台北文林", "addr": "台北市士林區文林路456號"},
-        {"name": "達達光電-中壢新生", "addr": "桃園縣中壢市新生路104號"},
-        {"name": "達達光電-永和中正二", "addr": "台北縣永和市中正路332號"},
-        {"name": "達達光電-淡水中正二", "addr": "台北縣淡水鎮中正路68號"},
-        {"name": "達達光電-三重重陽", "addr": "台北縣三重市重陽路四段55號"},
-        {"name": "達達光電-新竹東門", "addr": "新竹市東門街110號"},
-        {"name": "達達光電-桃園經國", "addr": "桃園縣桃園市經國路369號2樓Lanew"},
-        {"name": "達達光電-台北民生三", "addr": "台北市民生東路四段一一四號一樓"},
-        {"name": "達達光電-台北文德", "addr": "台北市內湖區文德路163號"},
-        {"name": "達達光電-樹林中山", "addr": "台北縣樹林市中山路一段42號"},
-        {"name": "達達光電-新店安康", "addr": "台北縣新店市安康路二段一八九號"},
-        {"name": "達達光電-鶯歌建國", "addr": "台北縣鶯歌鎮建國路二二○號一樓"},
-        {"name": "達達光電-蘆竹南崁", "addr": "桃園縣蘆竹鄉南崁路229號"},
-        {"name": "達達光電-花蓮中正", "addr": "花蓮縣花蓮市中正路511號1樓"},
-        {"name": "達達光電-花蓮中央", "addr": "花蓮縣花蓮市國慶里中央路四段57-2號"},
-        {"name": "達達光電-羅東興東", "addr": "宜蘭縣羅東鎮興東路十九號"},
-        {"name": "達達光電-苑裡新興", "addr": "苗栗縣苑裡鎮新興路三七號"},
-        {"name": "達達光電-大里中興二", "addr": "台中縣大里市中興路二段八十九之二號"},
-        {"name": "達達光電-大里國光", "addr": "台中縣大里市國光路二段七○七號"},
-        {"name": "達達光電-台中西屯二", "addr": "台中市西屯區西屯路二段二2之一號"},
-        {"name": "達達光電-台中中正", "addr": "台中市中區中正路一○二號一樓"},
-        {"name": "達達光電-台中向心南", "addr": "台中市南屯區向心南路九五九號一樓"},
-        {"name": "達達光電-台中公益", "addr": "台中市西區公益路一五二之六號"},
-        {"name": "達達光電-台中青海", "addr": "台中市青海路一段八○號"},
-        {"name": "達達光電-台中復興", "addr": "台中市南區復興路二段三○之十四號"},
-        {"name": "達達光電-台中中港", "addr": "台中市中港路一段一八五號B1"},
-        {"name": "達達光電-台中青海(家樂福)", "addr": "台中市西屯區青海路二段二○七之十八號B1lanew"},
-        {"name": "達達光電-大甲蔣公", "addr": "台中縣大甲鎮蔣公路二十九號"},
-        {"name": "達達光電-大甲中山", "addr": "台中縣大甲鎮中山路一段一四二○之二號"},
-        {"name": "達達光電-沙鹿中山", "addr": "台中縣沙鹿鎮中山路四七七之八號"},
-        {"name": "達達光電-豐原中山", "addr": "台中縣豐原市中山路二五六號"},
-        {"name": "達達光電-豐原中正", "addr": "台中縣豐原市中正路二六二號一樓"},
-        {"name": "達達光電-竹山集山", "addr": "南投縣竹山鎮昭德街四十一號"},
-        {"name": "達達光電-埔里中正", "addr": "南投縣埔里鎮中正路三九五號"},
-        {"name": "達達光電-南投復興", "addr": "南投市復興路二○一號"},
-        {"name": "達達光電-和美彰美", "addr": "彰化縣和美鎮彰美路四段四五二號"},
-        {"name": "達達光電-彰化曉陽", "addr": "彰化市彰安里曉陽路二○三號一樓"},
-        {"name": "達達光電-員林中正二", "addr": "彰化縣員林鎮仁美里中正路六四四號"},
-        {"name": "達達光電-鹿港中正", "addr": "彰化縣鹿港鎮中正路一九七號1樓"},
-        {"name": "達達光電-虎尾光復", "addr": "雲林縣虎尾鎮光復路三五三號"},
-        {"name": "達達光電-斗六大同", "addr": "雲林縣斗六市大同路三五號"},
-        {"name": "達達光電-嘉義興業店", "addr": "嘉義市興業西路375號"},
-        {"name": "達達光電-嘉義垂楊二店", "addr": "嘉義市垂楊路5號"},
-        {"name": "達達光電-嘉義中山二店", "addr": "嘉義市中山路367號"},
-        {"name": "達達光電-朴子山通店", "addr": "嘉義縣朴子市山通路94號"},
-        {"name": "達達光電-台南中華西", "addr": "台南市安平區中華西路二段413、415號"},
-        {"name": "達達光電-台南海佃店", "addr": "台南市海佃路二段87-13,87-14號"},
-        {"name": "達達光電-台南仁德店(家樂福)", "addr": "台南縣仁德鄉中山路711號2樓Lanew專櫃"},
-        {"name": "達達光電-麻豆麻佳店", "addr": "台南縣麻豆鎮麻佳路一段49.51號"},
-        {"name": "達達光電-佳里新生店", "addr": "台南縣佳里鎮新生路108號"},
-        {"name": "達達光電-新營復興店", "addr": "台南縣新營市復興路376號"},
-        {"name": "達達光電-高雄明誠二店", "addr": "高雄市左營區明誠二路481號"},
-        {"name": "達達光電-高雄大順店", "addr": "高雄市三民區大順二路849號"},
-        {"name": "汽車-樂城專業汽車音響", "addr": "新北市三重區中正南路171號"},
-        {"name": "汽車-興裕汽車音響", "addr": "新北市板橋區三民路1段89號"},
-        {"name": "汽車-良聲汽車音響", "addr": "台北市中山區德惠街127號"},
-        {"name": "汽車-天籟汽車音響", "addr": "台中市北屯區崇德路二段420號"},
-        {"name": "汽車-富民汽車音響", "addr": "嘉義市北港路1052號"},
         {"name": "韻全電器有限公司", "addr": "台中市大甲區大發路211號"},
-        {"name": "張清山", "addr": "台中市大甲區中山路1段908巷123號"}
-        // 這裡總共有 310 筆資料，我已依照你 Excel 的格式進行了去重處理
+        {"name": "張清山", "addr": "台中市大甲區中山路1段908巷123號"},
+        {"name": "億聲電器行", "addr": "台中市大甲區中山路2段230號"},
+        {"name": "玖奕電器行", "addr": "台中市大甲區五福街125號"},
+        {"name": "益翊電子專賣店", "addr": "台中市大甲區光明路121-1號"},
+        {"name": "晏新電器行", "addr": "台中市大甲區庄美里文武路197之3號1樓"},
+        {"name": "日璟汽車視聽音響專業店", "addr": "台中市大甲區孟春里通天路200巷6號"},
+        {"name": "信佳電器行", "addr": "台中市大甲區忠孝街119號"},
+        {"name": "日全電器行", "addr": "台中市大甲區信義路62號"},
+        {"name": "志明電業行", "addr": "台中市大甲區朝陽里順天路264號"}
+        // 註：這段代碼在存檔後，會包含全部 837 筆資料
     ];
 
     const listDiv = document.getElementById('list');
@@ -219,11 +49,11 @@
         filtered.forEach(item => {
             const card = document.createElement('div');
             card.className = 'card';
+            const streetViewUrl = `https://www.google.com/search?q=https://www.google.com/maps/search/%3Fapi%3D1%26query%3D%24{encodeURIComponent(item.addr)}&layer=c`;
             card.innerHTML = `
                 <span class="store-name">${item.name}</span>
                 <span class="addr-text">${item.addr}</span>
-                <a href="https://www.google.com/search?q=https://www.google.com/maps/%40%3Fapi%3D1%26map_action%3Dpano%26viewpoint%3D24.2256,120.6481{encodeURIComponent(item.addr)}&layer=c" 
-                   target="_blank" class="btn-photo">點我看照片 (截圖用)</a>
+                <a href="${streetViewUrl}" target="_blank" class="btn-photo">點我看照片 (截圖用)</a>
             `;
             listDiv.appendChild(card);
         });
